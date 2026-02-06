@@ -2,11 +2,14 @@
 <html lang="ur" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>جامع مسجد شاہ محمد بھیرہ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>مسجد شاہ محمد ایپ</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     
-    <!-- صرف اردو فونٹ استعمال کیا گیا ہے -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+    <!-- گلز فونٹ -->
+    <link href="https://fonts.googleapis.com/css2?family=Gulzar&display=swap" rel="stylesheet">
+    <!-- آئیکنز -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -14,12 +17,13 @@
             --primary-color: #0F5132;
             --primary-light: #198754;
             --accent-color: #D4AF37;
-            --bg-color: #F8F9FA;
-            --text-color: #212529;
-            --text-muted: #6c757d;
+            --bg-color: #f8f9fa;
+            --text-color: #333;
             --white: #ffffff;
-            --shadow: 0 4px 15px rgba(0,0,0,0.08);
-            --radius: 16px;
+            --nav-height: 70px;
+            --header-height: 60px;
+            /* میزان بینک کا رنگ */
+            --meezan-green: #008744; 
         }
 
         * {
@@ -27,379 +31,538 @@
             margin: 0;
             padding: 0;
             -webkit-tap-highlight-color: transparent;
+            font-family: 'Gulzar', serif;
         }
 
         body {
-            font-family: 'Noto Nastaliq Urdu', serif; /* صرف ایک فونٹ */
             background-color: #eef2f3;
             color: var(--text-color);
-            line-height: 2.2; /* اردو کے لیے لائن اسپیسنگ */
-            max-width: 480px; 
-            margin: 0 auto;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            height: 100%;
             background-color: var(--bg-color);
-            min-height: 100vh;
-            border-left: 1px solid #ddd;
-            border-right: 1px solid #ddd;
-            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        /* اسپلیش اسکرین */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-color);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            cursor: pointer;
+            transition: opacity 0.5s ease-out;
+        }
+        
+        .splash-logo {
+            font-size: 3rem;
+            color: var(--accent-color);
+            animation: pulse 2s infinite;
         }
 
         /* ہیڈر */
         header {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            height: var(--header-height);
+            background: linear-gradient(135deg, var(--primary-color), #0a3622);
             color: var(--white);
-            padding: 25px 20px;
-            border-bottom-left-radius: 25px;
-            border-bottom-right-radius: 25px;
-            box-shadow: 0 4px 12px rgba(15, 81, 50, 0.3);
-            position: sticky;
-            top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
             z-index: 100;
-            text-align: center;
+            flex-shrink: 0;
         }
 
-        .brand h1 {
-            font-size: 2rem;
-            margin-bottom: 5px;
+        header h1 {
+            font-size: 1.4rem;
             color: var(--accent-color);
-            font-weight: bold;
         }
 
-        /* ہیرو سیکشن */
-        .hero {
-            text-align: center;
-            padding: 25px 20px;
+        /* مین کنٹینٹ ایریا */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+            padding: 20px;
+            padding-bottom: 90px; 
         }
 
-        .hero-img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            margin-bottom: 20px;
-            border: 3px solid var(--white);
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
         }
 
-        section {
-            padding: 10px 20px 30px 20px;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .section-title {
-            text-align: center;
-            margin-bottom: 20px;
-            color: var(--primary-color);
-            font-size: 1.5rem;
-            font-weight: bold;
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
 
-        /* پیمنٹ کارڈز */
-        .payment-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .payment-card {
+        /* نیچے نیویگیشن بار */
+        .bottom-nav {
+            height: var(--nav-height);
             background: var(--white);
-            padding: 20px 10px;
-            border-radius: var(--radius);
-            text-align: center;
-            box-shadow: var(--shadow);
-            cursor: pointer;
-            border: 1px solid transparent;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid #ddd;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            z-index: 9999;
+        }
+
+        .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: transform 0.1s;
-        }
-
-        .payment-card:active {
-            transform: scale(0.95);
-            background-color: #f0fff4;
-        }
-
-        .payment-card i {
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-            color: var(--primary-color);
-        }
-
-        .payment-card h3 {
-            font-size: 1.1rem;
-            margin-bottom: 8px;
-            color: var(--text-color);
-        }
-
-        .payment-card .number {
-            font-size: 1.1rem;
+            color: #555;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.3s;
+            flex: 1;
+            height: 100%;
+            cursor: pointer;
             font-weight: bold;
-            color: var(--primary-light);
-            direction: ltr;
-            margin-bottom: 5px;
         }
 
-        .tap-hint {
-            font-size: 0.75rem;
-            color: #999;
+        .nav-item i {
+            font-size: 1.5rem;
+            margin-bottom: 4px;
         }
 
-        .payment-card.full-width {
-            grid-column: span 2;
-            background: linear-gradient(to right, #ffffff, #f9fff9);
-            border: 1px solid var(--primary-light);
+        .nav-item.active {
+            color: var(--primary-color);
+            background-color: #f0fff4;
+            border-top: 3px solid var(--primary-color);
         }
 
-        /* ویقف و نگران کارڈ */
-        .info-card {
-            background: var(--white);
-            padding: 20px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            margin-bottom: 20px;
-            text-align: center;
-            border-top: 4px solid var(--accent-color);
-        }
-
-        .verse-box {
-            background-color: #f0f7f4;
-            border: 1px dashed var(--primary-light);
+        /* UI elements */
+        .card {
+            background: white;
             padding: 15px;
             border-radius: 12px;
-            margin-top: 15px;
-            font-size: 0.95rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
         }
 
-        .trustees-container {
+        .hero-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar-bg {
+            background: #e9ecef;
+            height: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: var(--primary-light);
+            height: 100%;
+            width: 65%;
+            border-radius: 5px;
+        }
+
+        .btn-copy {
+            background: var(--primary-color);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
             display: flex;
-            justify-content: space-around;
-            margin-bottom: 20px;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 5px;
+            width: 100%;
+            border: none;
+            font-size: 1rem;
+        }
+        
+        .btn-copy:active {
+            background: #0a3622;
         }
 
-        .trustee-card {
-            background: var(--white);
-            padding: 15px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
+        .map-frame {
+            width: 100%;
+            height: 300px;
+            border: 0;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .wa-float {
+            position: absolute;
+            bottom: 80px;
+            left: 20px;
+            width: 55px;
+            height: 55px;
+            background: #25d366;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 9998;
+            text-decoration: none;
+            font-size: 1.8rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            border-right: 4px solid var(--accent-color);
+            padding-right: 10px;
+            background: linear-gradient(to left, rgba(15,81,50,0.05), transparent);
+            padding: 5px 10px 5px 0;
+        }
+        
+        .supervisor-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        
+        .supervisor {
             text-align: center;
             width: 48%;
         }
-
-        /* موڈل */
-        .modal {
-            display: none; 
-            position: fixed; 
-            z-index: 200; 
-            left: 0;
-            top: 0;
-            width: 100%; 
-            height: 100%; 
-            background-color: rgba(0,0,0,0.6); 
-            backdrop-filter: blur(5px);
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 50% auto; 
-            padding: 25px;
-            border-radius: 20px;
-            width: 85%; 
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
-
-        .close-modal {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .bank-details {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 15px 0;
-            text-align: right;
-        }
-
-        .bank-row {
+        
+        .supervisor i {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            background: #f0f7f4;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            border-bottom: 1px dashed #ccc;
-            padding-bottom: 4px;
-            font-size: 0.9rem;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .bank-row:last-child { border-bottom: none; }
+        /* برانڈ کارڈ کے لیے مخصوص اسٹائل */
+        .brand-card-header {
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        /* جاز کیش */
+        .jazzcash-theme i { color: #f9a825; }
+        .jazzcash-theme h3 { color: #333; }
+        
+        /* ایزی پیسہ */
+        .easypaisa-theme i { color: #00a651; }
+        
+        /* میزان بینک */
+        .meezan-theme { border-top: 4px solid var(--meezan-green); }
+        .meezan-theme i { color: var(--meezan-green); }
 
         /* ٹوسٹ */
         #toast {
-            visibility: hidden;
-            min-width: 250px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 50px;
-            padding: 12px;
             position: fixed;
-            z-index: 1000;
+            bottom: 90px;
             left: 50%;
-            bottom: 30px;
             transform: translateX(-50%);
-            font-size: 0.9rem;
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 1rem;
             opacity: 0;
+            pointer-events: none;
             transition: opacity 0.3s;
+            z-index: 20000;
         }
+        #toast.show { opacity: 1; }
 
-        #toast.show {
-            visibility: visible;
-            opacity: 1;
-            bottom: 50px;
-        }
-
-        footer {
-            background-color: var(--white);
-            text-align: center;
-            padding: 20px;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            border-top: 1px solid #eee;
-        }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="brand">
-            <h1>مسجد شاہ محمد</h1>
-            <p>تعمیر و نگران کمیٹی</p>
+    <div class="app-container">
+        
+        <!-- اسپلیش اسکرین -->
+        <div id="splash-screen" onclick="dismissSplash()">
+            <i class="fa-solid fa-mosque splash-logo"></i>
+            <h1 style="margin-top: 20px;">جامع مسجد شاہ محمد</h1>
+            <p>دھوری روڈ بھیرہ</p>
+            <p style="margin-top:50px; font-size:0.8rem; opacity:0.7;">کھولنے کے لیے کلک کریں</p>
         </div>
-    </header>
 
-    <main>
-        <section class="hero">
-            <img src="https://picsum.photos/seed/shahmosque/800/600" alt="مسجد" class="hero-img">
-            <p style="font-size: 1.2rem; color: var(--primary-color); margin-bottom: 10px;">
-                اللہ کے گھر کی تعمیر میں حصہ لیں
-            </p>
-        </section>
+        <!-- ہیڈر -->
+        <header>
+            <h1 id="header-title">خوش آمدید</h1>
+        </header>
 
-        <section>
-            <h2 class="section-title">فضل و اجر</h2>
-            <div class="info-card">
-                <h3 style="color: var(--primary-color); margin-bottom: 5px;">جناب شاہ محمد صاحب</h3>
-                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px;">وقف کنندہ</p>
+        <!-- مین کہانی (اسکرول ایریا) -->
+        <div class="content-area">
+
+            <!-- ٹیب 1: ہوم -->
+            <div id="tab-home" class="tab-content active">
+                <img src="https://picsum.photos/seed/mosque_new/800/600" alt="مسجد" class="hero-img">
                 
-                <div class="verse-box">
-                    <p>"جس نے اللہ کے لیے مسجد بنائی، وہ اللہ کے گھر میں بیٹھنے والوں میں سے ہوگا۔"</p>
-                    <small style="display:block; margin-top:5px; color:#666;">(صحیح بخاری)</small>
+                <!-- نگران سیکشن -->
+                <div class="card" style="border-top: 4px solid var(--accent-color);">
+                    <h3 style="text-align: center; color: var(--primary-color); margin-bottom: 5px;">تعمیری دیکھ بھال</h3>
+                    <p style="text-align: center; font-size: 0.9rem; color: #666; margin-bottom: 15px;">تعمیر و انتظامات کی تمام ذمہ داری</p>
+                    
+                    <div class="supervisor-row">
+                        <div class="supervisor">
+                            <i class="fa-solid fa-user-gear"></i>
+                            <div style="font-weight: bold; font-size: 1rem; margin-top: 5px;">مہر حیات</div>
+                            <small>نگران</small>
+                        </div>
+                        <div class="supervisor">
+                            <i class="fa-solid fa-hard-hat"></i>
+                            <div style="font-weight: bold; font-size: 1rem; margin-top: 5px;">حافظ جہانگیر</div>
+                            <small>نگران</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="section-title">تعمیر کی پیشرفت</h2>
+                    <p style="font-size: 0.9rem; color: #666;">اہلِ خیر کی عطیات سے کام جاری ہے</p>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill"></div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:bold;">
+                        <span>ٹارگٹ: 20 لاکھ</span>
+                        <span style="color:var(--primary-light);">تمام شدہ: 7.5 لاکھ</span>
+                    </div>
+                </div>
+
+                <div class="card" style="background: #0a3622; color: white;">
+                    <h3 style="color: var(--accent-color); margin-bottom: 5px;">فضل و اجر</h3>
+                    <p style="font-size: 0.9rem; margin-bottom: 10px;">جناب شاہ محمد صاحب (وقف کنندہ)</p>
+                    <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; font-size: 1rem; font-weight: bold; text-align: center; border: 1px dashed var(--accent-color);">
+                        "جس نے اللہ کے لیے مسجد بنائی، وہ اللہ کے گھر میں بیٹھنے والوں میں سے ہوگا۔"
+                    </div>
                 </div>
             </div>
-        </section>
 
-        <section>
-            <h2 class="section-title">ممبران کمیٹی</h2>
-            <div class="trustees-container">
-                <div class="trustee-card">
-                    <i class="fa-solid fa-user-tie" style="color:var(--primary-light); font-size:1.5rem; margin-bottom:5px;"></i>
-                    <div style="font-weight:bold;">مہر حیات</div>
-                    <small>نگران تعمیر</small>
+            <!-- ٹیب 2: عطیات (اپ ڈیٹ شدہ) -->
+            <div id="tab-donate" class="tab-content">
+                <h2 class="section-title">عطیات کے طریقے</h2>
+                
+                <!-- 1. مہر حیات - جاز کیش -->
+                <div class="card jazzcash-theme">
+                    <div class="brand-card-header">
+                        <i class="fa-solid fa-mobile-screen-button" style="font-size:2rem;"></i>
+                        <h3>JazzCash</h3>
+                    </div>
+                    <div style="text-align:center; font-size:0.9rem; color:#666; margin-bottom:5px;">جناب مہر حیات صاحب</div>
+                    <div style="background:#f8f9fa; padding:10px; border-radius:8px; text-align:center; margin:10px 0; direction:ltr; font-weight:bold; font-size:1.2rem; color:#000;">
+                        0000000000
+                    </div>
+                    <button class="btn-copy" onclick="copyToClipboard('03022258667')">
+                        <i class="fa-regular fa-copy"></i> کاپی کریں
+                    </button>
                 </div>
-                <div class="trustee-card">
-                    <i class="fa-solid fa-user-shield" style="color:var(--primary-light); font-size:1.5rem; margin-bottom:5px;"></i>
-                    <div style="font-weight:bold;">جہانگیر بدر</div>
-                    <small>نگران انتظامات</small>
+
+                <!-- 2. حافظ جہانگیر - ایزی پیسہ -->
+                <div class="card easypaisa-theme">
+                    <div class="brand-card-header">
+                        <i class="fa-solid fa-mobile-retro" style="font-size:2rem;"></i>
+                        <h3>Easypaisa</h3>
+                    </div>
+                    <div style="text-align:center; font-size:0.9rem; color:#666; margin-bottom:5px;">جناب حافظ جہانگیر بدر</div>
+                    <div style="background:#f8f9fa; padding:10px; border-radius:8px; text-align:center; margin:10px 0; direction:ltr; font-weight:bold; font-size:1.2rem; color:#000;">
+                        <!-- اصل نمبر لکھیں -->
+                        0341-8786300
+                    </div>
+                    <button class="btn-copy" onclick="copyToClipboard('03001234567')">
+                        <i class="fa-regular fa-copy"></i> کاپی کریں
+                    </button>
+                </div>
+
+                <!-- 3. میزان بینک -->
+                <div class="card meezan-theme">
+                    <div class="brand-card-header">
+                        <i class="fa-solid fa-building-columns" style="font-size:2rem;"></i>
+                        <h3>UBL Bank</h3>
+                    </div>
+                    <div style="font-size:0.95rem; line-height:2; margin-top:10px;">
+                        <div><strong>اکاؤنٹ نمبر:</strong> <span dir="ltr">0302-2258667</span></div>
+                        <div><strong>اکاؤنٹ ٹائٹل:</strong> <br>مسجد شاہ محمد کمیٹی</div>
+                        <div><strong>IBAN:</strong> <br><span dir="ltr" style="font-size:0.85rem; background:#f0fff4; padding:2px; border-radius:4px; display:block; margin-top:5px;">PK36MEZAN0000001234567890</span></div>
+                    </div>
+                    <button class="btn-copy" onclick="copyToClipboard('PK03UNIL0109000268843898')" style="margin-top:10px;">
+                        <i class="fa-regular fa-copy"></i> IBAN کاپی کریں
+                    </button>
                 </div>
             </div>
-        </section>
 
-        <section id="donate">
-            <h2 class="section-title">عطیات کے حسابات</h2>
-            
-            <div class="payment-grid">
-                <!-- جاز کیش لنک -->
-                <a href="jazzcash://" class="payment-card" onclick="copyToClipboard('03022258667')">
-                    <i class="fa-solid fa-mobile-screen-button"></i>
-                    <h3>جاز کیش</h3>
-                    <div class="number">0302-2258667</div>
-                    <span class="tap-hint">کاپی اور ایپ کھولیں</span>
-                </a>
+            <!-- ٹیب 3: مقام (مپ) - اپ ڈیٹ شدہ پتہ -->
+            <div id="tab-map" class="tab-content">
+                <h2 class="section-title">ہمارا مقام</h2>
+                <div class="card" style="padding:0;">
+                    <!-- مپ کو دھوری روڈ بھیرہ پر سیٹ کیا گیا ہے -->
+                    <iframe class="map-frame" src="https://maps.google.com/maps?FWG8+6V6 Bhera, Pakistan,+Sargodha,+Pakistan&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0"></iframe>
+                    <a href="https://maps.google.com/?FWG8+6V6 Bhera, Pakistan+Road,+Bhera,+Sargodha,+Pakistan" target="_blank" style="display:block; text-align:center; padding:15px; color:var(--primary-color); text-decoration:none; font-weight:bold; border-top:1px solid #eee;">
+                        <i class="fa-solid fa-location-dot"></i> گوگل میپس پر کھولیں
+                    </a>
+                </div>
+                
+                <div class="card">
+                    <h3 style="margin-bottom:10px;">رابطہ اور پتہ</h3>
+                    
+                    <!-- پتہ -->
+                    <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dashed #eee;">
+                        <i class="fa-solid fa-location-dot" style="color:var(--primary-color); margin-left:5px;"></i>
+                        <strong>پتہ:</strong> دھوری روڈ، بھیرہ، ضلع سرگودھا
+                    </div>
 
-                <!-- ایزی پیسہ لنک -->
-                <a href="easypaisa://" class="payment-card" onclick="copyToClipboard('03457654321')">
-                    <i class="fa-solid fa-mobile-retro"></i>
-                    <h3>ایزی پیسہ</h3>
-                    <div class="number">0302-2258667</div>
-                    <span class="tap-hint">کاپی اور ایپ کھولیں</span>
-                </a>
-
-                <!-- بینک تفصیلات -->
-                <div class="payment-card full-width" onclick="openModal('bankModal')">
-                    <i class="fa-solid fa-building-columns"></i>
-                    <h3>بینک اکاؤنٹ (HBL)</h3>
-                    <span class="tap-hint">تفصیلات دیکھنے کے لیے کلک کریں</span>
+                    <a href="tel:03022258667" style="display:flex; align-items:center; gap:10px; color:#333; text-decoration:none; margin-bottom:10px;">
+                        <div style="width:40px; height:40px; background:#eee; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
+                        <span>مہر حیات: 03006026482</span>
+                    </a>
+                    <a href="tel:03001234567" style="display:flex; align-items:center; gap:10px; color:#333; text-decoration:none;">
+                        <div style="width:40px; height:40px; background:#eee; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
+                        <span>جہانگیر بدر: 03022258667</span>
+                    </a>
                 </div>
             </div>
-        </section>
-    </main>
 
-    <footer>
-        <p>مسجد شاہ محمد تعمیر کمیٹی</p>
-        <a href="tel:03001234567" style="color: var(--primary-color); text-decoration: none; margin-top: 5px; display: block;">
-            <i class="fa-solid fa-phone"></i> کال کریں: 0302-2258667-
-        </a>
-    </footer>
-
-    <!-- ٹوسٹ -->
-    <div id="toast">نمبر کاپی ہو گیا!</div>
-
-    <!-- موڈل: بینک -->
-    <div id="bankModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal('bankModal')">&times;</span>
-            <h3 style="color: var(--primary-color); margin-bottom: 15px;">بینک اکاؤنٹ</h3>
-            <div class="bank-details">
-                <div class="bank-row"><span>بینک:</span> <strong>حبیب بینک (HBL)</strong></div>
-                <div class="bank-row"><span>اکاؤنٹ:</span> <strong>مہر حیات / جہانگیر بدر</strong></div>
-                <div class="bank-row"><span>نمبر:</span> <strong>0302-2258667</strong></div>
-                <div class="bank-row"><span>IBAN:</span> <strong style="direction: ltr;">PK36HABB0000001234567890</strong></div>
-            </div>
         </div>
+
+        <!-- واٹس ایپ فلوٹنگ بٹن -->
+        <a href="https://wa.me/923022258667" class="wa-float" id="wa-float-btn">
+            <i class="fa-brands fa-whatsapp"></i>
+        </a>
+
+        <!-- نیچے نیویگیشن بار -->
+        <nav class="bottom-nav">
+            <div class="nav-item active" onclick="switchTab('home')">
+                <i class="fa-solid fa-house"></i>
+                <span>ہوم</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('donate')">
+                <i class="fa-solid fa-hand-holding-heart"></i>
+                <span>عطیات</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('map')">
+                <i class="fa-solid fa-map-location-dot"></i>
+                <span>مقام</span>
+            </div>
+        </nav>
+
     </div>
 
+    <!-- ٹوسٹ -->
+    <div id="toast">نمبر کاپی ہو گیا</div>
+
     <script>
+        // اسپلیش اسکرین ڈسمس فنکشن
+        function dismissSplash() {
+            const splash = document.getElementById('splash-screen');
+            splash.style.opacity = '0';
+            setTimeout(() => {
+                splash.style.display = 'none';
+            }, 500);
+        }
+
+        // خودبخود ڈسمس
+        window.addEventListener('load', () => {
+            setTimeout(dismissSplash, 1500);
+        });
+
+        // ٹیب سوچنگ فنکشن
+        function switchTab(tabName) {
+            // سب کے ٹیبز پھینک دیں
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // سب نیویگیشن آئیٹمز ان ایکٹیو
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // منتخب کردہ ٹیب کو ایکٹیو کریں
+            document.getElementById('tab-' + tabName).classList.add('active');
+            
+            // نیویگیشن میں ایکٹیو کلاس لگائیں
+            const clickedNav = document.querySelectorAll('.nav-item');
+            if(tabName === 'home') clickedNav[0].classList.add('active');
+            if(tabName === 'donate') clickedNav[1].classList.add('active');
+            if(tabName === 'map') clickedNav[2].classList.add('active');
+
+            // ہیڈر ٹائٹل اپ ڈیٹ کریں
+            const headerTitle = document.getElementById('header-title');
+            const waBtn = document.getElementById('wa-float-btn');
+            
+            if(tabName === 'home') {
+                headerTitle.innerText = 'خوش آمدید';
+                waBtn.style.display = 'flex';
+            } else if(tabName === 'donate') {
+                headerTitle.innerText = 'عطیات کے طریقے';
+                waBtn.style.display = 'flex';
+            } else if(tabName === 'map') {
+                headerTitle.innerText = 'رابطہ اور مقام';
+                waBtn.style.display = 'none';
+            }
+
+            // اسکرول ٹاپ
+            document.querySelector('.content-area').scrollTop = 0;
+        }
+
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(function() {
-                showToast("نمبر کاپی کر لیا گیا!");
+                const toast = document.getElementById('toast');
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2000);
             });
-        }
-
-        function showToast(message) {
-            var x = document.getElementById("toast");
-            x.innerText = message;
-            x.className = "show";
-            setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
-        }
-
-        function openModal(modalId) {
-            document.getElementById(modalId).style.display = "block";
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = "none";
-        }
-
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.style.display = "none";
-            }
         }
     </script>
 </body>
-
 </html>
-
-
